@@ -10,7 +10,6 @@ import {
   ResponsiveContainer,
   ComposedChart,
   ReferenceLine,
-  Area,
 } from 'recharts';
 import { Activity, AlertCircle, Zap } from 'lucide-react';
 import { useRace } from '../../context/RaceContext';

@@ -556,20 +556,18 @@ export const RaceProvider = ({ children }) => {
     if (state.raceState.isRunning && sessionId) {
       if (ws.status === 'disconnected' || ws.status === 'error') {
         raceStartedRef.current = false;
-        ws.connect();
+        wsRef.current.connect();
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.raceState.isRunning, sessionId, ws.status]); // Intentionally excluding 'ws' to prevent connection loops
+  }, [state.raceState.isRunning, sessionId, ws.status]); // Using wsRef for method calls to avoid loop
 
   // Effect to start race once connected (only once per session)
   React.useEffect(() => {
     if (state.raceState.isRunning && ws.status === 'connected' && !raceStartedRef.current) {
       raceStartedRef.current = true;
-      ws.startRace();
+      wsRef.current.startRace();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.raceState.isRunning, ws.status]); // Intentionally excluding 'ws' to prevent duplicate startRace calls
+  }, [state.raceState.isRunning, ws.status]); // Using wsRef for method calls to avoid loop
 
   // SAFETY WATCHDOG: Detect and recover from stuck simulation states
   const lastLapUpdateRef = React.useRef(Date.now());
