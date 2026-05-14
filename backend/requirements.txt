@@ -1,0 +1,55 @@
+# =============================================================================
+# F1 Strategy Platform — Backend Dependencies
+#
+# PyTorch CPU-only installation (avoids 2+ GB CUDA build on Railway):
+#   pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
+#
+# Or install torch separately first, then the rest:
+#   pip install torch==2.1.2+cpu --extra-index-url https://download.pytorch.org/whl/cpu
+#   pip install -r requirements.txt
+# =============================================================================
+
+# ── Web Framework ─────────────────────────────────────────────────────────────
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# ── Data Validation ───────────────────────────────────────────────────────────
+pydantic==2.6.0
+
+# ── HTTP Client (for OpenF1) ──────────────────────────────────────────────────
+aiohttp==3.9.3
+httpx==0.26.0
+
+# ── Database ──────────────────────────────────────────────────────────────────
+sqlalchemy==2.0.25
+# PostgreSQL driver (production) — also works with Railway PostgreSQL plugin
+psycopg2-binary==2.9.9
+
+# ── Authentication & Security ─────────────────────────────────────────────────
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+slowapi==0.1.9
+
+# ── Data Science / ML ─────────────────────────────────────────────────────────
+numpy==1.26.3
+pandas==2.2.0
+scikit-learn==1.4.0
+xgboost==2.0.3
+lightgbm==4.3.0
+scipy==1.12.0
+joblib==1.3.2
+
+# ── PyTorch (CPU-only) ────────────────────────────────────────────────────────
+# Install with: pip install torch==2.1.2+cpu --extra-index-url https://download.pytorch.org/whl/cpu
+# Listed here for dependency tracking — the +cpu suffix is resolved at install time
+torch==2.1.2
+
+# ── F1 Data ───────────────────────────────────────────────────────────────────
+fastf1==3.3.3
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+python-dotenv==1.0.0
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+pytest==8.0.0

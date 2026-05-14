@@ -1,0 +1,13 @@
+# F1 Strategy Platform v4.0 - Grafana Dashboard Provisioning
+apiVersion: 1
+
+providers:
+  - name: 'F1 Strategy Dashboards'
+    orgId: 1
+    folder: 'F1 Strategy'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards

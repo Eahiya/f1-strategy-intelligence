@@ -1,0 +1,605 @@
+/**
+ * F1 Strategy Platform v4.0 - Mobile-First Responsive Styles
+ * Progressive enhancement: Mobile → Tablet → Desktop
+ */
+
+/* ==========================================
+   CSS CUSTOM PROPERTIES (Variables)
+   ========================================== */
+:root {
+  /* Breakpoints */
+  --breakpoint-mobile: 768px;
+  --breakpoint-tablet: 1024px;
+  
+  /* Spacing Scale (Mobile-first: 4px base) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  
+  /* Typography Scale */
+  --text-xs: 10px;
+  --text-sm: 12px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  
+  /* Touch targets (minimum 44px for accessibility) */
+  --touch-min: 44px;
+  --touch-comfortable: 48px;
+  
+  /* Layout */
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --nav-height: 56px;
+  --header-height: 48px;
+}
+
+/* Tablet adjustments */
+@media (min-width: 768px) {
+  :root {
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --text-base: 16px;
+    --nav-height: 64px;
+    --header-height: 56px;
+  }
+}
+
+/* Desktop adjustments */
+@media (min-width: 1024px) {
+  :root {
+    --space-lg: 32px;
+    --space-xl: 48px;
+    --text-xl: 24px;
+    --text-2xl: 32px;
+    --nav-height: 0; /* Sidebar instead */
+  }
+}
+
+/* ==========================================
+   BASE STYLES (Mobile-First)
+   ========================================== */
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: var(--text-base);
+  -webkit-text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0a0a0f;
+  color: #ffffff;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================
+   MOBILE LAYOUT (Base)
+   ========================================== */
+
+.app-container {
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(var(--nav-height) + var(--safe-area-bottom));
+}
+
+/* Mobile header */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-height);
+  background: rgba(10, 10, 15, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(225, 6, 0, 0.2);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-md);
+  gap: var(--space-sm);
+}
+
+/* Mobile main content */
+.app-main {
+  flex: 1;
+  padding: var(--space-md);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile bottom navigation */
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--nav-height) + var(--safe-area-bottom));
+  background: rgba(20, 20, 30, 0.98);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: var(--safe-area-bottom);
+  z-index: 100;
+}
+
+.mobile-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: var(--nav-height);
+  color: #888;
+  text-decoration: none;
+  font-size: var(--text-xs);
+  gap: 4px;
+  transition: color 0.2s;
+}
+
+.mobile-nav-item.active {
+  color: #e10600;
+}
+
+.mobile-nav-item svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ==========================================
+   TABLET LAYOUT (768px+)
+   ========================================== */
+
+@media (min-width: 768px) {
+  .app-container {
+    padding-bottom: 0;
+  }
+  
+  .mobile-nav {
+    display: none;
+  }
+  
+  /* Tablet uses sidebar */
+  .app-layout {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .sidebar {
+    width: 200px;
+    height: 100vh;
+    background: rgba(20, 20, 30, 0.98);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-lg);
+  }
+  
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-top: var(--space-xl);
+  }
+  
+  .sidebar-nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    border-radius: 8px;
+    color: #888;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  
+  .sidebar-nav-item:hover,
+  .sidebar-nav-item.active {
+    background: rgba(225, 6, 0, 0.1);
+    color: #fff;
+  }
+  
+  .app-main {
+    flex: 1;
+    padding: var(--space-lg);
+  }
+}
+
+/* ==========================================
+   DESKTOP LAYOUT (1024px+)
+   ========================================== */
+
+@media (min-width: 1024px) {
+  .sidebar {
+    width: 260px;
+    padding: var(--space-xl);
+  }
+  
+  .sidebar-nav {
+    gap: var(--space-md);
+  }
+  
+  .sidebar-nav-item {
+    padding: var(--space-md) var(--space-lg);
+    font-size: var(--text-lg);
+  }
+  
+  .app-main {
+    padding: var(--space-xl);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+
+/* ==========================================
+   DASHBOARD GRID (Responsive)
+   ========================================== */
+
+.dashboard-grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: 1fr; /* Mobile: single column */
+}
+
+/* Tablet: 2 columns */
+@media (min-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+}
+
+/* Desktop: 3-4 columns with featured items */
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xl);
+  }
+  
+  .dashboard-grid .featured-card {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 1400px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ==========================================
+   CARDS (Touch-Optimized)
+   ========================================== */
+
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: var(--space-lg);
+  min-height: var(--touch-min);
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.card:active {
+  transform: scale(0.98);
+}
+
+.card-interactive {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Tablet+ hover states */
+@media (min-width: 768px) {
+  .card-interactive:hover {
+    border-color: rgba(225, 6, 0, 0.5);
+    transform: translateY(-2px);
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+.card-title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ==========================================
+   FORMS (Mobile-Optimized)
+   ========================================== */
+
+.form-group {
+  margin-bottom: var(--space-lg);
+}
+
+.form-label {
+  display: block;
+  font-size: var(--text-sm);
+  color: #aaa;
+  margin-bottom: var(--space-xs);
+  font-weight: 500;
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  min-height: var(--touch-comfortable);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  font-size: var(--text-base);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #e10600;
+  background: rgba(225, 6, 0, 0.05);
+}
+
+/* Larger touch targets on mobile */
+@media (max-width: 767px) {
+  .form-input,
+  .form-select {
+    font-size: 16px; /* Prevents zoom on iOS */
+    min-height: 48px;
+  }
+}
+
+/* ==========================================
+   BUTTONS (Touch-Optimized)
+   ========================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  min-height: var(--touch-comfortable);
+  padding: var(--space-sm) var(--space-lg);
+  font-size: var(--text-base);
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #e10600 0%, #ff3300 100%);
+  color: #fff;
+}
+
+.btn-primary:active {
+  transform: scale(0.96);
+}
+
+/* Larger buttons on mobile */
+@media (max-width: 767px) {
+  .btn {
+    min-height: 52px;
+    padding: var(--space-md) var(--space-xl);
+    font-size: var(--text-lg);
+  }
+  
+  .btn-full-width {
+    width: 100%;
+  }
+}
+
+/* ==========================================
+   TABLES → CARDS (Mobile)
+   ========================================== */
+
+/* Mobile: Convert tables to card list */
+@media (max-width: 767px) {
+  .responsive-table {
+    display: block;
+  }
+  
+  .responsive-table thead {
+    display: none;
+  }
+  
+  .responsive-table tbody,
+  .responsive-table tr {
+    display: block;
+  }
+  
+  .responsive-table tr {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin-bottom: var(--space-md);
+    padding: var(--space-md);
+  }
+  
+  .responsive-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-xs) 0;
+    border: none;
+  }
+  
+  .responsive-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #888;
+  }
+}
+
+/* Tablet+: Show as normal table */
+@media (min-width: 768px) {
+  .responsive-table {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .responsive-table thead {
+    display: table-header-group;
+  }
+  
+  .responsive-table th,
+  .responsive-table td {
+    padding: var(--space-md);
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .responsive-table th {
+    font-weight: 600;
+    color: #888;
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+/* ==========================================
+   CHARTS (Responsive)
+   ========================================== */
+
+.chart-container {
+  width: 100%;
+  height: 250px; /* Mobile default */
+}
+
+@media (min-width: 768px) {
+  .chart-container {
+    height: 300px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .chart-container {
+    height: 400px;
+  }
+}
+
+/* ==========================================
+   UTILITY CLASSES
+   ========================================== */
+
+.hide-mobile { display: none; }
+.hide-tablet { display: block; }
+.hide-desktop { display: block; }
+
+@media (min-width: 768px) {
+  .hide-mobile { display: block; }
+  .hide-tablet { display: none; }
+  .show-tablet { display: block; }
+}
+
+@media (min-width: 1024px) {
+  .hide-tablet { display: block; }
+  .hide-desktop { display: none; }
+  .show-desktop { display: block; }
+}
+
+/* Touch-only (hide hover elements on mobile) */
+@media (hover: none) {
+  .hover-only {
+    display: none !important;
+  }
+}
+
+/* ==========================================
+   ANIMATIONS
+   ========================================== */
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+/* ==========================================
+   SCROLLBAR STYLING
+   ========================================== */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ==========================================
+   PRINT STYLES
+   ========================================== */
+
+@media print {
+  .mobile-nav,
+  .sidebar,
+  .btn {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .card {
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+}

@@ -1,0 +1,9 @@
+# Railway Nixpacks build configuration
+# Installs CPU-only PyTorch before the rest of requirements.txt
+# This avoids downloading the 2+ GB CUDA build on Railway's build servers.
+
+[phases.install]
+cmds = [
+  "pip install torch==2.1.2+cpu --extra-index-url https://download.pytorch.org/whl/cpu",
+  "pip install -r requirements.txt"
+]

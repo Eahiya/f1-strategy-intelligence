@@ -1,0 +1,109 @@
+# =========================
+# PYTHON
+# =========================
+backend/venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# =========================
+# NODE
+# =========================
+frontend/node_modules/
+node_modules/
+
+# =========================
+# BUILD FILES
+# =========================
+frontend/build/
+dist/
+build/
+
+# =========================
+# ENV FILES
+# =========================
+.env
+.env.*
+!.env.example
+!backend/.env.example
+!frontend/.env.example
+
+# =========================
+# LOGS
+# =========================
+*.log
+backend/logs/
+logs/
+
+# =========================
+# DATABASES (never commit SQLite or DB files)
+# =========================
+*.db
+*.sqlite
+*.sqlite3
+f1_strategy.db
+backend/f1_strategy.db
+
+# =========================
+# FASTF1 / TELEMETRY CACHE
+# =========================
+backend/cache/
+backend/f1_cache/
+f1_cache/
+*.ff1pkl
+fastf1_http_cache.sqlite
+
+# =========================
+# DATASETS / MODELS
+# =========================
+*.csv
+*.parquet
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+*.onnx
+*.npz
+ml_models/
+
+# =========================
+# NOTEBOOKS CACHE
+# =========================
+.ipynb_checkpoints/
+notebooks/__pycache__/
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# CACHE / TOOL CACHES
+# =========================
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# =========================
+# DATA DIRECTORY (large datasets)
+# =========================
+data/*.csv
+data/*.parquet
+data/*.pkl
+
+# =========================
+# MONITORING / INFRA
+# =========================
+monitoring/data/
+monitoring/grafana/data/

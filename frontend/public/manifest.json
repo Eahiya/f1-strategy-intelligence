@@ -1,0 +1,79 @@
+{
+  "name": "F1 Strategy Intelligence",
+  "short_name": "F1 Strategy",
+  "description": "Elite AI-powered F1 race strategy optimization system",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#e10600",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["sports", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/icons/download.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/download.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/download.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/download.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/download.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/download.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/download.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/download.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Quick Simulation",
+      "short_name": "Simulate",
+      "description": "Run a quick strategy simulation",
+      "url": "/quick",
+      "icons": [{ "src": "/icons/download.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View strategy dashboard",
+      "url": "/",
+      "icons": [{ "src": "/icons/download.png", "sizes": "96x96" }]
+    }
+  ]
+}

@@ -1,0 +1,446 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+/* ==========================================
+   F1 STRATEGY DASHBOARD - PROFESSIONUAL THEME
+   ========================================== */
+
+:root {
+  --f1-red: #e10600;
+  --f1-red-glow: rgba(225, 6, 0, 0.4);
+  --f1-red-dim: rgba(225, 6, 0, 0.15);
+  --f1-dark: #0a0a0a;
+  --f1-card: rgba(15, 15, 15, 0.8);
+  --f1-border: rgba(255, 255, 255, 0.06);
+  --f1-border-hover: rgba(255, 255, 255, 0.12);
+  --f1-text-primary: #ffffff;
+  --f1-text-secondary: rgba(255, 255, 255, 0.6);
+  --f1-text-dim: rgba(255, 255, 255, 0.35);
+  --f1-emerald: #10b981;
+  --f1-amber: #fbbf24;
+  --f1-blue: #3b82f6;
+  --f1-purple: #a855f7;
+  --f1-cyan: #06b6d4;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--f1-dark);
+  color: var(--f1-text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ==========================================
+   ANIMATED BACKGROUND
+   ========================================== */
+
+.bg-f1-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.bg-f1-radial {
+  background: radial-gradient(ellipse at 50% 0%, rgba(225, 6, 0, 0.08) 0%, transparent 60%);
+}
+
+/* ==========================================
+   GLASS CARD
+   ========================================== */
+
+.f1-card {
+  background: var(--f1-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--f1-border);
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.f1-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  pointer-events: none;
+}
+
+.f1-card:hover {
+  border-color: var(--f1-border-hover);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.f1-card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--f1-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.f1-card-body {
+  padding: 24px;
+}
+
+/* ==========================================
+   TYPOGRAPHY
+   ========================================== */
+
+.font-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.f1-heading {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.f1-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--f1-text-dim);
+}
+
+.f1-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* ==========================================
+   BADGES & INDICATORS
+   ========================================== */
+
+.f1-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.f1-badge-live {
+  background: rgba(225, 6, 0, 0.15);
+  color: var(--f1-red);
+  border: 1px solid rgba(225, 6, 0, 0.3);
+}
+
+.f1-badge-success {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--f1-emerald);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.f1-badge-warning {
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--f1-amber);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+/* ==========================================
+   SCROLLBAR
+   ========================================== */
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ==========================================
+   ANIMATIONS
+   ========================================== */
+
+@keyframes f1-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px var(--f1-red-glow);
+  }
+  50% {
+    box-shadow: 0 0 40px var(--f1-red-glow), 0 0 60px rgba(225, 6, 0, 0.2);
+  }
+}
+
+@keyframes f1-pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+@keyframes f1-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes f1-count-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes f1-border-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-f1-glow {
+  animation: f1-glow 2s ease-in-out infinite;
+}
+
+.animate-f1-pulse-dot {
+  animation: f1-pulse-dot 1.5s ease-in-out infinite;
+}
+
+.animate-f1-shimmer {
+  animation: f1-shimmer 2s ease-in-out infinite;
+}
+
+/* Shimmer effect for loading states */
+.f1-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.f1-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  animation: f1-shimmer 2s ease-in-out infinite;
+}
+
+/* ==========================================
+   TIRES
+   ========================================== */
+
+.tire-soft { background: #e10600; color: white; }
+.tire-medium { background: #fbbf24; color: #000; }
+.tire-hard { background: #e5e7eb; color: #000; }
+.tire-inter { background: #22c55e; color: white; }
+.tire-wet { background: #3b82f6; color: white; }
+
+/* ==========================================
+   POSITION STYLES
+   ========================================== */
+
+.pos-1 { color: #fbbf24; text-shadow: 0 0 20px rgba(251, 191, 36, 0.5); }
+.pos-2 { color: #d1d5db; text-shadow: 0 0 20px rgba(209, 213, 219, 0.3); }
+.pos-3 { color: #d97706; text-shadow: 0 0 20px rgba(217, 119, 6, 0.3); }
+
+/* ==========================================
+   BUTTONS
+   ========================================== */
+
+.f1-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.f1-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.f1-btn:hover::before {
+  opacity: 1;
+}
+
+.f1-btn:active {
+  transform: scale(0.98);
+}
+
+.f1-btn-primary {
+  background: linear-gradient(135deg, var(--f1-red), #b91c1c);
+  color: white;
+  box-shadow: 0 4px 20px rgba(225, 6, 0, 0.3);
+}
+
+.f1-btn-primary:hover {
+  box-shadow: 0 8px 30px rgba(225, 6, 0, 0.4);
+}
+
+.f1-btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--f1-text-primary);
+  border: 1px solid var(--f1-border);
+}
+
+.f1-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--f1-border-hover);
+}
+
+.f1-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   INPUTS
+   ========================================== */
+
+.f1-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--f1-border);
+  border-radius: 12px;
+  color: var(--f1-text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.f1-input:focus {
+  outline: none;
+  border-color: var(--f1-red);
+  box-shadow: 0 0 0 3px var(--f1-red-dim);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.f1-input::placeholder {
+  color: var(--f1-text-dim);
+}
+
+/* ==========================================
+   DIVIDERS
+   ========================================== */
+
+.f1-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--f1-border), transparent);
+}
+
+/* ==========================================
+   RECHARTS OVERRIDES
+   ========================================== */
+
+.recharts-wrapper {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+.recharts-cartesian-axis-tick-value {
+  font-size: 11px;
+  fill: rgba(255, 255, 255, 0.4);
+}
+
+.recharts-cartesian-grid line {
+  stroke: rgba(255, 255, 255, 0.06) !important;
+}
+
+.recharts-tooltip-wrapper {
+  outline: none !important;
+}
+
+/* ==========================================
+   SELECTION
+   ========================================== */
+
+::selection {
+  background: var(--f1-red-dim);
+  color: white;
+}
+
+/* ==========================================
+   FOCUS
+   ========================================== */
+
+:focus-visible {
+  outline: 2px solid var(--f1-red);
+  outline-offset: 2px;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 768px) {
+  html { font-size: 14px; }
+}
+
+@media (pointer: coarse) {
+  button, [role="button"], a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@media print {
+  body { background: white; color: black; }
+}
