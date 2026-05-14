@@ -12,10 +12,19 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
+import os
+
 try:
     import fastf1
-    fastf1.Cache.enable_cache("./f1_cache")
-    FASTF1_AVAILABLE = True
+    CACHE_DIR = "./f1_cache"
+    try:
+        os.makedirs(CACHE_DIR, exist_ok=True)
+        fastf1.Cache.enable_cache(CACHE_DIR)
+        logger.info(f"FastF1 cache successfully initialized at: {CACHE_DIR}")
+        FASTF1_AVAILABLE = True
+    except Exception as e:
+        logger.error(f"Failed to initialize FastF1 cache directory: {e}. Real data disabled.")
+        FASTF1_AVAILABLE = False
 except ImportError:
     FASTF1_AVAILABLE = False
     logger.warning("FastF1 not installed. Real data features will be unavailable.")
