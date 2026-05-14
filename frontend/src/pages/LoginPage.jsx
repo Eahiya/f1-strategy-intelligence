@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Lock, User, AlertCircle, CheckCircle, Shield, ChevronRight, Zap } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 

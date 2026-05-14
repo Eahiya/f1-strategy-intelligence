@@ -27,7 +27,7 @@ export const CommandHeader = ({ user, status, onLogout }) => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative bg-[#0a0a0a]/90 backdrop-blur-xl border-b border-white/[0.06]"
+      className="relative z-50 bg-[#0a0a0a]/90 backdrop-blur-xl border-b border-white/[0.06]"
     >
       {/* Top accent line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#e10600]/40 to-transparent" />

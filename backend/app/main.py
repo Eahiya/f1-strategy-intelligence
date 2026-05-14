@@ -1,3 +1,14 @@
+import sys
+
+# Force UTF-8 encoding for standard output/error to prevent Windows charmap crashes during FastF1 simulation
+# Must be at the very top before any other imports that might use console streams
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
+
 """
 F1 Strategy Intelligence System - Elite Edition v3.1
 Enhanced with Authentication & Authorization Security Layer
@@ -83,6 +94,7 @@ class SimulateRequest(BaseModel):
     tire_compound: str = "soft"  # "soft", "medium", "hard"
     weather: str = "dry"  # "dry", "wet", "mixed"
     include_safety_car: bool = False
+    use_openf1: bool = False
 
 
 class AdvancedOptimizeRequest(BaseModel):
@@ -406,12 +418,15 @@ async def simulate_strategy(
     **Rate Limit:** 30 requests per minute
     """
     # Resolve circuit ID (handles frontend snake_case -> backend proper name)
-    circuit_key = resolve_circuit_id(body.circuit)
-    if not circuit_key:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Unknown circuit: {body.circuit}. Available: {list(CIRCUITS.keys())}"
-        )
+    circuit_key = None
+    total_laps = None
+    if body.circuit != "live":
+        circuit_key = resolve_circuit_id(body.circuit)
+        if not circuit_key:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unknown circuit: {body.circuit}. Available: {list(CIRCUITS.keys())}"
+            )
     
     # Validate tire compound (case-insensitive)
     tire_key = body.tire_compound.lower() if body.tire_compound else ""
@@ -420,9 +435,6 @@ async def simulate_strategy(
             status_code=400,
             detail=f"Unknown tire: {body.tire_compound}. Available: {list(TIRE_COMPOUNDS.keys())}"
         )
-    
-    # Get total laps
-    total_laps = body.laps or CIRCUITS[circuit_key]["laps"]
     
     # Validate and map strategy type
     strategy_mapping = {
@@ -434,26 +446,67 @@ async def simulate_strategy(
     if strategy_type not in valid_strategies:
         raise HTTPException(status_code=400, detail=f"Invalid strategy_type: {body.strategy_type}")
     
-    # If FastF1 is available, try to enhance simulation with real data (non-blocking)
+    # If FastF1 or OpenF1 is requested, try to enhance simulation with real data (non-blocking)
     real_data_enhancement = None
-    if _real_data_provider:
+    
+    # 1. Try OpenF1 for Live Session Data
+    if body.use_openf1 or body.circuit == "live":
         try:
-            import threading
-            result_holder = [None]
+            service = get_openf1_service()
+            session_info = await service.get_session_info()
+            
+            if session_info and session_info.get("available"):
+                live_circuit = session_info.get("circuit", "").lower()
+                # Resolve the live circuit to internal name
+                resolved_live = resolve_circuit_id(live_circuit)
+                if resolved_live:
+                    circuit_key = resolved_live
+                    total_laps = body.laps or CIRCUITS[circuit_key]["laps"]
+                    print(f"[OpenF1] Live session detected: {session_info.get('session_name')} at {circuit_key}")
+                
+                # Try to get live weather
+                weather_data = await service.get_normalized_weather()
+                if weather_data and not body.weather:
+                    # Map OpenF1 weather to internal types
+                    rainfall = weather_data.get("rainfall", 0)
+                    if rainfall > 0.5: body.weather = "wet"
+                    elif rainfall > 0: body.weather = "mixed"
+                    else: body.weather = "dry"
+                    print(f"[OpenF1] Using live weather: {body.weather}")
+            
+            # Final safety check for live mode
+            if not circuit_key:
+                print("[!] Live session circuit could not be resolved, falling back to Monza")
+                circuit_key = "Monza"
+                total_laps = body.laps or CIRCUITS[circuit_key]["laps"]
+        except Exception as e:
+            print(f"[!] OpenF1 live data fetch failed: {e}")
+            if not circuit_key:
+                circuit_key = "Monza"
+            
+            total_laps = body.laps or CIRCUITS[circuit_key]["laps"]
+
+    # Final fallback if not already set
+    if not circuit_key:
+        circuit_key = "Monza"
+    if not total_laps:
+        total_laps = body.laps or CIRCUITS[circuit_key]["laps"]
+
+    # 2. Try FastF1 for Historical Data
+    if _real_data_provider and not real_data_enhancement:
+        try:
+            # Run in thread to not block event loop (FastF1 is synchronous)
             def _fetch():
                 try:
-                    result_holder[0] = _real_data_provider.get_tire_degradation_data(
+                    return _real_data_provider.get_tire_degradation_data(
                         circuit_key, tire_key, min_laps=3
                     )
                 except Exception:
-                    pass
-            t = threading.Thread(target=_fetch, daemon=True)
-            t.start()
-            t.join(timeout=10)
-            if t.is_alive():
-                print(f"[!] FastF1 data fetch timed out for {circuit_key}/{tire_key}, using synthetic")
-            else:
-                real_data_enhancement = result_holder[0]
+                    return None
+            
+            real_data_enhancement = await asyncio.to_thread(_fetch)
+            if not real_data_enhancement:
+                print(f"[!] FastF1 data fetch returned no data for {circuit_key}/{tire_key}, using synthetic")
         except Exception as e:
             print(f"[!] FastF1 data enhancement failed: {e}")
     

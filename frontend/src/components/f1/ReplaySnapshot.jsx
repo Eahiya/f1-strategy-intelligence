@@ -1,5 +1,7 @@
 import React, { memo, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line no-unused-vars
 import { Camera, Play, Download, X, Clock, Flag, Activity, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRace } from '../../context/RaceContext';
 
@@ -172,6 +174,7 @@ export const ReplaySnapshot = () => {
         captureSnapshot();
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [raceState.currentLap, raceState.lifecycleStatus, autoCapture, raceState.isRunning]);
 
   const captureSnapshot = useCallback(() => {

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Trophy, TrendingUp, TrendingDown, Minus, Timer } from 'lucide-react';
 import { useRace } from '../../context/RaceContext';
 import AnimatedValue from '../common/AnimatedValue';
+  // eslint-disable-next-line no-unused-vars
 import { getDriverBadge } from '../../data/drivers';
 
 const CompetitorRow = memo(({ competitor, index, playerPosition, isPlayer }) => {

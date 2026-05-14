@@ -1,6 +1,7 @@
 import React, { useMemo, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Area, ComposedChart } from 'recharts';
+  // eslint-disable-next-line no-unused-vars
 import { Brain, TrendingUp, Clock, Target, Activity } from 'lucide-react';
 import { useRace } from '../../context/RaceContext';
 

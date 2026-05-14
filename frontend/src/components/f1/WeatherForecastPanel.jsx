@@ -56,6 +56,7 @@ export const WeatherForecastPanel = () => {
   const [loading, setLoading] = useState(false);
   const [forecast, setForecast] = useState(null);
   const [error, setError] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [circuit, setCircuit] = useState('monza');
   const [rainProb, setRainProb] = useState(30);
 

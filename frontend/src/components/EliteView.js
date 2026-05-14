@@ -7,7 +7,6 @@ import { Zap, Brain, Users, ChevronRight } from 'lucide-react';
 
 const EliteView = ({ deviceType, api, user }) => {
   const [activeFeature, setActiveFeature] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const features = [
     {

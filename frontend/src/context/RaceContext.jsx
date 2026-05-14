@@ -4,7 +4,7 @@ import { useNotifications } from './NotificationContext';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { safeGet } from '../utils/validation';
 import { buildUiRecommendation } from '../utils/raceRecommendation';
-import { DRIVERS, getDriverByCode, getDriverByName, getTeamColor, getDriverBadge } from '../data/drivers';
+import { DRIVERS, getDriverByCode, getDriverByName, getTeamColor } from '../data/drivers';
 
 const RaceContext = createContext(null);
 
@@ -330,6 +330,14 @@ function raceReducer(state, action) {
     case 'WS_PIT_STOP':
       // Pit stop complete - update tire state and ensure race continues
       const pitCompound = action.payload.compound || 'medium';
+      const isPlayer = action.payload.driver === state.player.driver || action.payload.driver === 'YOU';
+      
+      const updatedCompetitors = isPlayer ? state.competitors : state.competitors.map(c => 
+        (c.driver === action.payload.driver || c.driverCode === action.payload.driver) 
+        ? { ...c, tire_compound: pitCompound, tire_age: 0 } 
+        : c
+      );
+
       return {
         ...state,
         raceState: {
@@ -337,18 +345,19 @@ function raceReducer(state, action) {
           lifecycleStatus: 'RUNNING', // FORCE back to RUNNING
           isPaused: false, // Ensure not paused
         },
-        player: {
+        player: isPlayer ? {
           ...state.player,
           tire: pitCompound,
           tireAge: 0, // Reset tire age after pit
           tireDegradation: 0, // Reset degradation
-        },
+        } : state.player,
+        competitors: updatedCompetitors,
         actionState: {
           ...state.actionState,
-          isExecuting: false,
-          lastAction: `PIT_${pitCompound.toUpperCase()}`,
-          lastActionTime: Date.now(),
-          pendingDecision: null, // Clear any pending decision
+          isExecuting: isPlayer ? false : state.actionState.isExecuting,
+          lastAction: isPlayer ? `PIT_${pitCompound.toUpperCase()}` : state.actionState.lastAction,
+          lastActionTime: isPlayer ? Date.now() : state.actionState.lastActionTime,
+          pendingDecision: isPlayer ? null : state.actionState.pendingDecision,
         },
         // Add pit stop event to events list
         events: [
@@ -356,9 +365,9 @@ function raceReducer(state, action) {
           {
             type: 'pit_stop',
             lap: action.payload.lap,
-            title: 'PIT STOP COMPLETE',
+            title: isPlayer ? 'PIT STOP COMPLETE' : `${action.payload.driver} PIT STOP`,
             description: `+${Number(action.payload.pit_time || 0).toFixed(1)}s • Rejoined P${action.payload.rejoined_position ?? '?'}`,
-            driverCode: action.payload.driver?.substring(0, 3).toUpperCase() || 'YOU',
+            driverCode: action.payload.driver_code || action.payload.driver?.substring(0, 3).toUpperCase() || 'YOU',
           }
         ],
       };
@@ -550,7 +559,8 @@ export const RaceProvider = ({ children }) => {
         ws.connect();
       }
     }
-  }, [state.raceState.isRunning, sessionId, ws.status]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.raceState.isRunning, sessionId, ws.status]); // Intentionally excluding 'ws' to prevent connection loops
 
   // Effect to start race once connected (only once per session)
   React.useEffect(() => {
@@ -558,7 +568,8 @@ export const RaceProvider = ({ children }) => {
       raceStartedRef.current = true;
       ws.startRace();
     }
-  }, [state.raceState.isRunning, ws.status]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.raceState.isRunning, ws.status]); // Intentionally excluding 'ws' to prevent duplicate startRace calls
 
   // SAFETY WATCHDOG: Detect and recover from stuck simulation states
   const lastLapUpdateRef = React.useRef(Date.now());

@@ -28,7 +28,6 @@ import {
   IncidentTracker,
   TrackMapVisualization,
   ReplaySnapshot,
-  WeekendSession,
   DriverIntelligence,
   RaceControlCenter,
 } from '../components/f1';
@@ -118,7 +117,8 @@ const DashboardInner = () => {
         circuit,
         strategy_type: strategyMode === 'auto' ? 'auto' : strategyMode,
         tire_compound: 'soft',
-        weather: 'dry'
+        weather: 'dry',
+        use_openf1: circuit === 'live'
       });
       setResult(response.data);
       startRace(circuit, response.data.lap_times?.length || 53, {
@@ -156,7 +156,6 @@ const DashboardInner = () => {
         'Aggressive': 89.8 + i * 0.12 + Math.sin(i * 0.25) * 0.6,
       }));
     }
-    const laps = result.lap_times.length;
     const sc = result.strategy_comparison || {};
     return result.lap_times.map((lt, i) => ({
       lap: i + 1,
@@ -305,8 +304,6 @@ const DashboardInner = () => {
       {/* Background effects */}
       <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:80px_80px] pointer-events-none" />
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(225,6,0,0.06)_0%,transparent_60%)] pointer-events-none" />
-      
-      <ToastContainer />
       
       {/* Header */}
       <CommandHeader 
@@ -593,6 +590,7 @@ const DashboardInner = () => {
           </div>
         </div>
       </footer>
+      <ToastContainer />
     </div>
   );
 };

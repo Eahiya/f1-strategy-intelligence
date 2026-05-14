@@ -493,7 +493,6 @@ export const generateRaceGrid = (numCars = 20) => {
   
   // Generate qualifying with team proximity
   const grid = [];
-  const positions = [];
   
   // Sort teams by their best driver's qualifying pace
   const sortedTeams = Object.entries(teamGroups).sort((a, b) => {

@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, ChevronDown, Flag } from 'lucide-react';
 
 const CIRCUITS = [
+  // Live / Real-Time Mode
+  { id: 'live', name: 'Live Session', country: 'OpenF1', flag: '📡', laps: 'Live', length: 'Real-time' },
   // European Rounds
   { id: 'monza', name: 'Monza', country: 'Italy', flag: '🇮🇹', laps: 53, length: '5.79 km' },
   { id: 'silverstone', name: 'Silverstone', country: 'UK', flag: '🇬🇧', laps: 52, length: '5.89 km' },
@@ -36,6 +38,7 @@ const CIRCUITS = [
 
 export const CircuitSelector = ({ selected, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [isFocused, setIsFocused] = useState(false);
   const containerRef = useRef(null);
   const selectedCircuit = CIRCUITS.find(c => c.id === selected) || CIRCUITS[0];

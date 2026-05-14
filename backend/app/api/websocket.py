@@ -110,6 +110,69 @@ def _compute_risk_score(player, weather_snapshot, safety_car_active: bool, total
     }
 
 
+async def _process_ai_pit_stops(race_sim: MultiCarSimulator, current_lap: int, weather_state: str, safety_car_active: bool, manager, session_id):
+    """Handle pit stop logic for AI drivers."""
+    if not race_sim or len(race_sim.drivers) <= 1:
+        return
+
+    for d in race_sim.drivers[1:]:  # Skip player (drivers[0])
+        should_pit = False
+        new_compound = "medium"
+        
+        # 1. Weather based pit stops
+        is_wet = weather_state in ["light_rain", "heavy_rain"]
+        is_slick = d.current_tire in ["soft", "medium", "hard"]
+        
+        if is_wet and is_slick:
+            should_pit = True
+            new_compound = "intermediate" if weather_state == "light_rain" else "wet"
+        elif not is_wet and not is_slick:
+            should_pit = True
+            new_compound = "medium"
+            
+        # 2. Tire age based pit stops
+        if not should_pit:
+            # Drivers have different thresholds based on tire management skill (if available, else 0.5)
+            tire_mgmt = getattr(d, 'tire_management', 0.5)
+            base_threshold = 18 + (tire_mgmt * 10) # 18-28 range
+            threshold = base_threshold + random.randint(-2, 2)
+            
+            if d.tire_age >= threshold:
+                should_pit = True
+                laps_left = race_sim.total_laps - current_lap
+                if laps_left < 12:
+                    new_compound = "soft"
+                elif laps_left < 25:
+                    new_compound = "medium"
+                else:
+                    new_compound = "hard"
+        
+        # 3. Safety car bonus
+        if not should_pit and safety_car_active and d.tire_age > 10:
+            if random.random() < 0.7:
+                should_pit = True
+                new_compound = "soft" if (race_sim.total_laps - current_lap) < 15 else "medium"
+
+        if should_pit:
+            race_sim.simulate_pit_stop(d, new_compound)
+            pit_time = round(random.uniform(22.5, 25.0), 3)
+            
+            driver_info = driver_manager.get_driver_by_name(d.name)
+            driver_code = driver_info.driver_code if driver_info else d.name[:3].upper()
+            
+            await manager.send_personal_message({
+                "type": "pit_stop",
+                "data": {
+                    "driver": d.name,
+                    "driver_code": driver_code,
+                    "compound": new_compound,
+                    "lap": current_lap,
+                    "pit_time": pit_time,
+                    "rejoined_position": d.position,
+                }
+            }, session_id)
+
+
 def _compute_predicted_gain(action: str, player, risk_score: float, safety_car_active: bool) -> float:
     if not action.upper().startswith("PIT_"):
         return 0.0
@@ -437,6 +500,22 @@ async def run_race_loop(
                 try:
                     weather_snapshot = weather_sys.evolve_weather(race_sim.current_lap + 1)
                     race_sim.weather = weather_snapshot.state.value
+                    
+                    # Calculate safety car status for this lap
+                    safety_car_active = any(
+                        getattr(d, 'safety_car', False) for d in race_sim.drivers
+                    ) or (random.random() < (0.006 + (0.01 if weather_snapshot.state != WeatherState.DRY else 0.0)) and race_sim.current_lap > 5)
+
+                    # Process AI pit stops BEFORE simulating the lap
+                    await _process_ai_pit_stops(
+                        race_sim, 
+                        race_sim.current_lap, 
+                        race_sim.weather, 
+                        safety_car_active, 
+                        manager, 
+                        session_id
+                    )
+                    
                     lap_result = race_sim.simulate_lap()
                     consecutive_errors = 0  # Reset error count on success
                 except Exception as lap_error:
@@ -449,9 +528,6 @@ async def run_race_loop(
                     await asyncio.sleep(0.5)
                     continue
 
-            safety_car_active = any(
-                getattr(d, 'safety_car', False) for d in race_sim.drivers
-            ) or (random.random() < (0.006 + (0.01 if weather_snapshot.state != WeatherState.DRY else 0.0)) and race_sim.current_lap > 5)
 
             # Generate enhanced events for new components
             enhanced_events = []

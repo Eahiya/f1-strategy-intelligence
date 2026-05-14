@@ -51,7 +51,7 @@ const ToastContainer = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none sm:max-w-md w-[calc(100vw-2rem)] sm:w-full">
+    <div className="fixed bottom-4 right-4 z-[9999] flex flex-col gap-2 pointer-events-none sm:max-w-md w-[calc(100vw-2rem)] sm:w-full">
       <AnimatePresence>
         {activeToasts.map((toast) => {
           const Icon = getIcon(toast.type);

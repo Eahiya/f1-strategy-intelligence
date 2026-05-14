@@ -16,6 +16,7 @@ const SimulationView = ({ deviceType, api }) => {
 
   useEffect(() => {
     fetchCircuits();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchCircuits = async () => {

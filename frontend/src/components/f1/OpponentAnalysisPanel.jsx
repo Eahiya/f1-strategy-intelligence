@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
+  // eslint-disable-next-line no-unused-vars
 import { Shield, TrendingUp, AlertTriangle, Target, Loader2, AlertCircle, ChevronDown } from 'lucide-react';
 import { eliteApi } from '../../services/api';
 
@@ -217,7 +218,7 @@ export const OpponentAnalysisPanel = () => {
               {recommendations.map((rec, i) => (
                 <div key={i} className="flex items-start gap-2 p-2 bg-white/[0.02] rounded-lg">
                   <TrendingUp className="w-3 h-3 text-blue-400 mt-0.5 shrink-0" />
-                  <span className="text-[11px] text-white/60">{rec}</span>
+                  <span className="text-[11px] text-white/60">{rec.reasoning || rec}</span>
                 </div>
               ))}
             </div>

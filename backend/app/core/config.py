@@ -114,6 +114,10 @@ CIRCUIT_ID_MAP = {
     'paul_ricard': 'Paul Ricard',
     'portimao': 'Portimao',
     'istanbul': 'Istanbul',
+    'yas marina': 'Abu Dhabi',
+    'yas_marina': 'Abu Dhabi',
+    'yas marina circuit': 'Abu Dhabi',
+    'abu dhabi': 'Abu Dhabi',
 }
 
 def resolve_circuit_id(circuit_id: str) -> str:

@@ -2,14 +2,12 @@
  * F1 Strategy Platform v4.0 - Mobile Command Center
  * Compact, mobile-optimized strategy dashboard
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   ChevronDown, 
   ChevronUp, 
   Clock, 
   MapPin, 
-  Tire,
-  AlertTriangle,
   TrendingUp,
   Activity,
   Play,

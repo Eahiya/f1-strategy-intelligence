@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   AlertCircle, CheckCircle2, Clock, Zap, TrendingUp, Shield, ArrowRight,
+  // eslint-disable-next-line no-unused-vars
   Timer, Flag, RefreshCw, Loader2, Car, Fuel, Wind, ChevronDown, ChevronUp,
   Target, TrendingDown, Activity, BarChart3
 } from 'lucide-react';

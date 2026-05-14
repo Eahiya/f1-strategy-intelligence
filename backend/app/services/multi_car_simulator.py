@@ -36,6 +36,7 @@ class Driver:
     current_tire: str = "soft"
     tire_age: int = 0
     pit_stops: int = 0
+    total_race_time: float = 0.0
     
 
 @dataclass
@@ -110,12 +111,16 @@ class MultiCarSimulator:
                     position=driver_data['position'],
                     gap_to_leader=driver_data['gap_to_leader'],
                     current_tire="soft",
-                    tire_age=0
+                    tire_age=0,
+                    total_race_time=driver_data['gap_to_leader']
                 ))
             self.num_cars = len(self.drivers)
         else:
             for config in driver_configs:
-                self.drivers.append(Driver(**config))
+                driver = Driver(**config)
+                if driver.total_race_time == 0.0 and driver.gap_to_leader != 0.0:
+                    driver.total_race_time = driver.gap_to_leader
+                self.drivers.append(driver)
                 self.num_cars = len(self.drivers)
         
         # Sort by position for initial grid
@@ -232,44 +237,46 @@ class MultiCarSimulator:
         self.current_lap += 1
         lap_results = []
         
-        # Calculate lap times
+        # 1. Calculate lap times and add to total race time
         for driver in self.drivers:
             position_effect = self.get_track_position(driver)
             lap_time = self.calculate_lap_time(driver, position_effect)
+            
+            driver.total_race_time += lap_time
+            driver.tire_age += 1
             
             lap_results.append({
                 'driver': driver,
                 'lap_time': lap_time,
                 'position_effect': position_effect
             })
-            
-            # Increment tire age
-            driver.tire_age += 1
         
-        # Sort by lap time for this lap
-        lap_results.sort(key=lambda x: x['lap_time'])
+        # 2. Sort by total race time to determine new positions
+        self.drivers.sort(key=lambda d: d.total_race_time)
         
-        # Update gaps and attempt overtakes
-        cumulative_time = 0.0
-        for i, result in enumerate(lap_results):
-            driver = result['driver']
-            
-            if i == 0:
-                driver.gap_to_leader = 0.0
-                cumulative_time = result['lap_time']
+        # 3. Update gaps and positions
+        leader_time = self.drivers[0].total_race_time
+        for i, driver in enumerate(self.drivers):
+            driver.position = i + 1
+            driver.gap_to_leader = driver.total_race_time - leader_time
+            if i > 0:
+                driver.gap_to_ahead = driver.total_race_time - self.drivers[i-1].total_race_time
             else:
-                cumulative_time += result['lap_time']
-                driver.gap_to_leader = cumulative_time - lap_results[0]['lap_time']
-                driver.gap_to_ahead = result['lap_time'] - lap_results[i-1]['lap_time']
+                driver.gap_to_ahead = 0.0
             
-            # Try overtake if in slipstream/dirty air
+            # Find the result for this driver to record position_effect
+            result = next(r for r in lap_results if r['driver'] is driver)
+            
+            # Try overtake if in slipstream/dirty air (using old positions or simplified logic)
+            # Actually overtakes are now naturally handled by lap times and sorting,
+            # but we can still trigger the overtake event for commentary.
             if i > 0 and result['position_effect'] in [TrackPosition.SLIPSTREAM, TrackPosition.DIRTY_AIR]:
-                ahead_driver = lap_results[i-1]['driver']
+                ahead_driver = self.drivers[i-1]
                 self.attempt_overtake(driver, ahead_driver, self.current_lap)
         
         # Record lap history
-        for result in lap_results:
-            driver = result['driver']
+        for driver in self.drivers:
+            result = next(r for r in lap_results if r['driver'] is driver)
             self.lap_history.append({
                 'lap': self.current_lap,
                 'driver_id': driver.driver_id,
@@ -285,8 +292,9 @@ class MultiCarSimulator:
     
     def simulate_pit_stop(self, driver: Driver, new_tire: str):
         """Execute pit stop for a driver."""
-        # Add pit loss time
+        # Add pit loss time to total race time
         pit_loss = self.circuit_config["pit_loss"]
+        driver.total_race_time += pit_loss
         driver.gap_to_leader += pit_loss
         
         # Reset tire
