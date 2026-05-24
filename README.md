@@ -66,7 +66,7 @@ f1-strategy-system/
 1. **Clone the repository**
 ```bash
 git clone <repository-url>
-cd f1-strategy-system
+cd f1-strategy-intelligence
 ```
 
 2. **Setup Backend**
