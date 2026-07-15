@@ -82,19 +82,21 @@ export const NotificationProvider = ({ children }) => {
     setNotifications(prev => [notification, ...prev].slice(0, 50)); // Keep last 50
     setUnreadCount(prev => prev + 1);
     
-    // Add to active toasts
-    setActiveToasts(prev => [notification, ...prev]);
+    // Toast pop-ups disabled per user request
+    // setActiveToasts(prev => [notification, ...prev]);
 
     if (soundEnabled && (type === NOTIFICATION_TYPES.CRITICAL || type === NOTIFICATION_TYPES.STRATEGY)) {
       playSound();
     }
 
-    // Auto-remove toast after duration (keeps it in notification history)
+    // Auto-remove toast logic disabled as toasts are no longer shown
+    /*
     if (duration > 0) {
       setTimeout(() => {
         dismissToast(id);
       }, duration);
     }
+    */
 
     return id;
   }, [notificationsEnabled, soundEnabled, playSound, dismissToast]);

@@ -458,6 +458,18 @@ const DashboardInner = () => {
             
             {/* Incident Tracker */}
             <IncidentTracker />
+
+            {/* AI Decision Panel */}
+            <DecisionPanel
+              decision={liveDecisionTitle || "Execute optimal pit strategy with undercut opportunity"}
+              explanation={currentRecommendation?.explanation || result?.explanation || "Analysis shows clear tire advantage window opening"}
+              alternatives={result?.alternatives?.map((alt, idx) => ({
+                name: alt.type || `Alternative ${idx + 1}`,
+                delta: alt.delta || 0,
+              }))}
+              confidence={displayConfidence}
+              whyPoints={decisionWhyPoints || undefined}
+            />
           </motion.div>
 
           {/* CENTER PANEL */}
@@ -493,6 +505,12 @@ const DashboardInner = () => {
             <div className="f1-card">
               <TrackMapVisualization />
             </div>
+
+            {/* Replay Snapshots */}
+            <ReplaySnapshot />
+            
+            {/* Driver Intelligence */}
+            <DriverIntelligence />
           </motion.div>
 
           {/* RIGHT PANEL */}
@@ -525,24 +543,6 @@ const DashboardInner = () => {
               riskLevel={displayRiskLevel}
               factors={displayRiskFactors}
             />
-
-            {/* AI Decision Panel */}
-            <DecisionPanel
-              decision={liveDecisionTitle || "Execute optimal pit strategy with undercut opportunity"}
-              explanation={currentRecommendation?.explanation || result?.explanation || "Analysis shows clear tire advantage window opening"}
-              alternatives={result?.alternatives?.map((alt, idx) => ({
-                name: alt.type || `Alternative ${idx + 1}`,
-                delta: alt.delta || 0,
-              }))}
-              confidence={displayConfidence}
-              whyPoints={decisionWhyPoints || undefined}
-            />
-            
-            {/* Replay Snapshots */}
-            <ReplaySnapshot />
-            
-            {/* Driver Intelligence */}
-            <DriverIntelligence />
           </motion.div>
         </motion.div>
         ) : (

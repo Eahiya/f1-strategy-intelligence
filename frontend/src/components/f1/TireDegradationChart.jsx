@@ -9,7 +9,7 @@ import AnimatedValue from '../common/AnimatedValue';
 const CustomTooltip = memo(({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[#0c0c0c]/95 border border-white/[0.08] rounded-lg p-3 shadow-[0_8px_24px_rgba(0,0,0,0.5)] backdrop-blur-sm">
+      <div className="bg-[#0a0a0a]/95 border border-white/[0.12] rounded-lg p-3 shadow-[0_12px_30px_rgba(0,0,0,0.7),0_0_15px_rgba(255,255,255,0.05)] backdrop-blur-md">
         <p className="text-white/30 text-[10px] mb-2 font-mono uppercase tracking-wider">Lap {label}</p>
         {payload.map((entry, index) => (
           <p key={index} className="text-xs font-mono flex items-center gap-2" style={{ color: entry.color }}>
@@ -83,6 +83,13 @@ export const TireDegradationChart = ({ tireData, pitStops }) => {
           <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>
+              <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
               {Object.entries(colors).map(([compound, color]) => (
                 <linearGradient key={compound} id={`tireGradient${compound}`} x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={color} stopOpacity={0.1}/>
@@ -143,6 +150,7 @@ export const TireDegradationChart = ({ tireData, pitStops }) => {
                 fill={`url(#tireGradient${compound})`}
                 dot={false}
                 isAnimationActive={false}
+                style={{ filter: 'url(#neon-glow)' }}
               />
             ))}
 
@@ -156,6 +164,7 @@ export const TireDegradationChart = ({ tireData, pitStops }) => {
                 dot={{ r: 2, fill: '#10b981', strokeWidth: 0 }}
                 isAnimationActive={true}
                 animationDuration={1000}
+                style={{ filter: 'url(#neon-glow)' }}
               />
             )}
           </AreaChart>

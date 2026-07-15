@@ -70,7 +70,7 @@ app.state.limiter = limiter
 # CORS middleware - more restrictive for production
 ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS", 
-    "http://localhost:3000,http://127.0.0.1:3000"
+    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001"
 ).split(",")
 
 app.add_middleware(

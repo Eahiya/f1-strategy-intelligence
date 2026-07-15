@@ -27,7 +27,7 @@ const generateFallbackData = (laps = 50) => {
 const CustomTooltip = memo(({ active, payload, label }) => {
   if (!active || !payload || payload.length === 0) return null;
   return (
-    <div className="bg-[#0c0c0c]/95 border border-white/[0.08] rounded-lg p-3 shadow-[0_8px_24px_rgba(0,0,0,0.5)] backdrop-blur-sm">
+    <div className="bg-[#0a0a0a]/95 border border-white/[0.12] rounded-lg p-3 shadow-[0_12px_30px_rgba(0,0,0,0.7),0_0_15px_rgba(255,255,255,0.05)] backdrop-blur-md">
       <div className="flex items-center justify-between gap-4 mb-2">
          <p className="text-white/30 text-[10px] font-mono uppercase tracking-wider">Lap {label}</p>
          {payload.some(p => p.name === 'Actual') && (
@@ -161,6 +161,15 @@ export const SimulationChart = ({ data, strategies, pitStops }) => {
         <div className="h-[300px] min-w-[600px]">
           <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={processedData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <defs>
+              <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
             
             <XAxis 
@@ -220,6 +229,7 @@ export const SimulationChart = ({ data, strategies, pitStops }) => {
                 strokeOpacity={raceState.isRunning ? strat.opacity : 1}
                 dot={false}
                 isAnimationActive={false}
+                style={{ filter: 'url(#neon-glow)' }}
               />
             ))}
             
@@ -234,6 +244,7 @@ export const SimulationChart = ({ data, strategies, pitStops }) => {
                 name="Actual"
                 isAnimationActive={true}
                 animationDuration={500}
+                style={{ filter: 'url(#neon-glow)' }}
               />
             )}
           </ComposedChart>

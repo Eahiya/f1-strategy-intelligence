@@ -29,6 +29,13 @@ from sklearn.model_selection import train_test_split, cross_val_score, KFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
+try:
+    from .lstm_predictor import SklearnLSTMWrapper
+    LSTM_AVAILABLE = True
+except ImportError:
+    LSTM_AVAILABLE = False
+
+
 
 class FeatureEngineer:
     """
@@ -178,7 +185,9 @@ class AdvancedLapTimePredictor:
         
     def _create_model(self):
         """Create the ML model based on type."""
-        if self.model_type == 'xgboost' and XGBOOST_AVAILABLE:
+        if self.model_type == 'lstm' and LSTM_AVAILABLE:
+            return SklearnLSTMWrapper(epochs=15, batch_size=32)
+        elif self.model_type == 'xgboost' and XGBOOST_AVAILABLE:
             return xgb.XGBRegressor(
                 n_estimators=200,
                 max_depth=8,
@@ -430,6 +439,8 @@ class ModelEnsemble:
             models = ['xgboost', 'random_forest']
             if LIGHTGBM_AVAILABLE:
                 models.append('lightgbm')
+            if LSTM_AVAILABLE:
+                models.append('lstm')
         
         self.models = {}
         self.weights = {}
