@@ -39,11 +39,7 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-      console.warn('Session expired or unauthorized. Redirecting to login...');
-      localStorage.removeItem('token');
-      if (!window.location.pathname.includes('/login')) {
-        window.location.href = '/login?expired=true';
-      }
+      console.warn('Session expired or unauthorized request.');
     }
     return Promise.reject(error);
   }

@@ -82,7 +82,7 @@ const SectionLabel = memo(({ children }) => (
 SectionLabel.displayName = 'SectionLabel';
 
 const DashboardInner = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const {
     raceState,
     startRace,
@@ -309,7 +309,6 @@ const DashboardInner = () => {
       <CommandHeader 
         user={{ name: user?.username || 'Race Engineer', role: user?.role || 'Engineer' }} 
         status={wsStatus || 'disconnected'} 
-        onLogout={logout}
       />
 
       {/* Safety Car Banner */}

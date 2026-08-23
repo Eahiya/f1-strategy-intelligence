@@ -19,11 +19,13 @@ export const useAuth = () => {
   return context;
 };
 
+const DEFAULT_USER = { username: 'Race Engineer', role: 'admin', email: 'admin@f1strategy.com' };
+
 // Auth Provider component
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(DEFAULT_USER);
   const [token, setToken] = useState(localStorage.getItem('token'));
-  const [loading, setLoading] = useState(true);
+  const [loading] = useState(false);
   const [error, setError] = useState(null);
 
   // Sync token to localStorage
@@ -35,31 +37,44 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Logout function
+  // Logout function (Resets session data without navigating away)
   const logout = useCallback(() => {
-    setToken(null);
-    setUser(null);
+    setUser(DEFAULT_USER);
     setError(null);
-    localStorage.removeItem('token');
   }, []);
 
-  // Check for existing session on mount
+  // Check for existing session or attempt silent login on mount
   useEffect(() => {
     const initAuth = async () => {
       if (token) {
         try {
           const response = await api.get('/auth/me');
-          setUser(response.data);
+          if (response.data) {
+            setUser(response.data);
+          }
         } catch (err) {
-          // Token invalid or expired
-          logout();
+          // Token invalid or backend offline; maintain default session
+        }
+      } else {
+        try {
+          const response = await api.post('/auth/login', {
+            username: 'admin',
+            password: 'admin123'
+          });
+          if (response.data?.access_token) {
+            setToken(response.data.access_token);
+            if (response.data.user) {
+              setUser(response.data.user);
+            }
+          }
+        } catch (err) {
+          // Auto-login unavailable; continue with default session
         }
       }
-      setLoading(false);
     };
 
     initAuth();
-  }, [token, logout]);
+  }, [token]);
 
   // Login function
   const login = useCallback(async (username, password) => {

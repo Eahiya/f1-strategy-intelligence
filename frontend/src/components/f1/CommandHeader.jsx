@@ -1,10 +1,10 @@
 import React, { useState, memo, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Settings, User, Wifi, Clock, LogOut, Radio } from 'lucide-react';
+import { Settings, User, Wifi, Clock, Radio } from 'lucide-react';
 import NotificationBell from '../notifications/NotificationBell';
 import SettingsModal from '../settings/SettingsModal';
 
-export const CommandHeader = ({ user, status, onLogout }) => {
+export const CommandHeader = ({ user, status }) => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -106,18 +106,6 @@ export const CommandHeader = ({ user, status, onLogout }) => {
               <div className="w-9 h-9 bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-xl flex items-center justify-center border border-white/[0.06]">
                 <User className="w-4 h-4 text-white/40" />
               </div>
-              
-              {onLogout && (
-                <motion.button 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={onLogout}
-                  className="p-2.5 hover:bg-red-500/10 hover:text-red-400 rounded-xl transition-colors border border-transparent hover:border-red-500/10"
-                  title="Logout"
-                >
-                  <LogOut className="w-4 h-4 text-white/25" />
-                </motion.button>
-              )}
             </div>
           </div>
         </div>

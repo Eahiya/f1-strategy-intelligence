@@ -48,11 +48,6 @@ const ProtectedRoute = ({
     );
   }
 
-  // Not authenticated - redirect to login
-  if (!isAuthenticated) {
-    return fallback || <Navigate to="/login" replace />;
-  }
-
   // Check role requirements
   if (requiredRoles) {
     const roles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles];

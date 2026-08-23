@@ -11,8 +11,6 @@ import SyntheticBanner from './notifications/SyntheticBanner';
 
 // Components
 import ErrorBoundary from './components/ErrorBoundary';
-import ProtectedRoute from './components/auth/ProtectedRoute';
-import LoginPage from './pages/LoginPage';
 import { NavigationSidebar } from './components/f1';
 import DashboardContent from './pages/Dashboard';
 import { LiveRaceWeekend, HeadToHeadComparison, WeatherForecastPanel, MultiCarSimulation, OpponentAnalysisPanel, HistoricalStrategyBrowser } from './components/f1';
@@ -62,15 +60,7 @@ const App = () => {
               <SyntheticBannerProvider>
                 <Router>
                 <Routes>
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route
-                    path="/"
-                    element={
-                      <ProtectedRoute>
-                        <DashboardWithNav />
-                      </ProtectedRoute>
-                    }
-                  />
+                  <Route path="/" element={<DashboardWithNav />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </Router>
