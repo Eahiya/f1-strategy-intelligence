@@ -99,7 +99,7 @@ export const NotificationProvider = ({ children }) => {
     */
 
     return id;
-  }, [notificationsEnabled, soundEnabled, playSound, dismissToast]);
+  }, [notificationsEnabled, soundEnabled, playSound]);
 
   const markAsRead = useCallback((id) => {
     setNotifications(prev => 
